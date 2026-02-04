@@ -100,11 +100,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GameDetailsWindow.xaml.cs">
+      <DependentUpon>GameDetailsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GameViewModel .cs" />
+    <Compile Include="RawgApiService.cs" />
     <Compile Include="RawgGame.cs" />
     <Compile Include="SearchWindow.xaml.cs">
       <DependentUpon>SearchWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="GameDetailsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

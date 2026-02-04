@@ -99,7 +99,18 @@ namespace OOP_Project
         {
             if (sender is Border border && border.Tag is GameViewModel game)
             {
-                SelectGame(game);
+                // 1. Check if this game is already the selected one
+                // (Assuming you have a variable or property tracking the selected game)
+                if (game.IsSelected)
+                {
+                    // If it's already selected, open the details window
+                    ShowGameDetails(game.Game);
+                }
+                else
+                {
+                    // 2. If it's not selected, select it now
+                    SelectGame(game);
+                }
             }
         }
 
@@ -119,6 +130,31 @@ namespace OOP_Project
 
             // Scroll to the selected item in the ListBox
             lstBxGame.ScrollIntoView(game);
+        }
+
+        private void lstBxGame_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (lstBxGame.SelectedItem is GameViewModel gameVM)
+            {
+                ShowGameDetails(gameVM.Game);
+            }
+        }
+
+        private void GameCard_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
+            {
+                if (sender is Border border && border.Tag is GameViewModel gameVM)
+                {
+                    ShowGameDetails(gameVM.Game);
+                }
+            }
+        }
+
+        private void ShowGameDetails(Game game)
+        {
+            GameDetailsWindow gameDetailWindow = new GameDetailsWindow(game);
+            gameDetailWindow.ShowDialog();
         }
     }
 }
