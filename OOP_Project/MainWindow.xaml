@@ -94,9 +94,9 @@
         </StackPanel>
 
         <!-- Title -->
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" 
+        <TextBlock x:Name="txtLibrary" HorizontalAlignment="Left" TextWrapping="Wrap" 
                    FontSize="28" VerticalAlignment="Center" Margin="20,0,0,0" 
-                   FontFamily="Segoe UI" Foreground="White" FontWeight="SemiBold">
+                   FontFamily="Bauhaus 93" Foreground="White">
             <Run Text="LIBRARY"/>
         </TextBlock>
 

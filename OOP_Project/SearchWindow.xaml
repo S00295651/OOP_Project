@@ -5,14 +5,279 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OOP_Project"
         mc:Ignorable="d"
-        Title="SearchWindow" Height="450" Width="800">
-    <Grid>
-        <StackPanel>
-            <TextBox x:Name="SearchBox"/>
-            <Button Content="Search" Click="Search_Click"/>
-            <ListBox x:Name="ResultsList"
-                     DisplayMemberPath="Name"
-                     MouseDoubleClick="ResultsList_MouseDoubleClick"/>
-        </StackPanel>
-    </Grid>
+        Title="Search Games" Height="500" Width="400"
+        Background="#1B2838"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        ResizeMode="CanResize"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <!-- Style for Search Button -->
+        <Style x:Key="SearchButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#5C7E10"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="3"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#74A216"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#4A6600"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style for Result Cards -->
+        <Style x:Key="ResultCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#16202D"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2A475E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="0" CornerRadius="8" CaptionHeight="0" />
+    </WindowChrome.WindowChrome>
+
+    <Border CornerRadius="8" BorderBrush="#0E1621" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Background="#171A21" CornerRadius="8,8,0,0"
+                    MouseLeftButtonDown="Window_MouseLeftButtonDown">
+                <Grid>
+                    <TextBlock Text="SEARCH GAMES" 
+                              FontSize="20" 
+                              FontWeight="SemiBold"
+                              Foreground="White"
+                              VerticalAlignment="Center"
+                              Margin="20,0,0,0"/>
+
+                    <!-- Close Button -->
+                    <Button Content="✕" 
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Stretch"
+                            Width="50"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            Foreground="White"
+                            FontSize="20"
+                            Click="btnClose_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#C93129"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <!-- Main Content -->
+            <Grid Grid.Row="1" Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Search Bar -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" 
+                            Background="#0E1621" 
+                            CornerRadius="3"
+                            BorderBrush="#2A475E"
+                            BorderThickness="1">
+                        <TextBox x:Name="SearchBox"
+                                Background="Transparent"
+                                Foreground="White"
+                                BorderThickness="0"
+                                FontSize="16"
+                                Padding="15,12"
+                                VerticalContentAlignment="Center"
+                                KeyDown="SearchBox_KeyDown">
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="TextBox">
+                                                <Grid>
+                                                    <ScrollViewer x:Name="PART_ContentHost" 
+                                                                Margin="0"
+                                                                VerticalAlignment="Center"/>
+                                                    <TextBlock Text="Enter game name..."
+                                                             Foreground="#4A5F78"
+                                                             FontSize="16"
+                                                             Padding="15,12"
+                                                             VerticalAlignment="Center"
+                                                             IsHitTestVisible="False">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Border>
+
+                    <Button Grid.Column="2" 
+                            Content="SEARCH" 
+                            Style="{StaticResource SearchButtonStyle}"
+                            Click="Search_Click"
+                            MinWidth="120"/>
+                </Grid>
+
+                <!-- Results List -->
+                <ScrollViewer Grid.Row="2" 
+                             VerticalScrollBarVisibility="Auto"
+                             HorizontalScrollBarVisibility="Disabled">
+                    <ItemsControl x:Name="ResultsList">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Width="180" Height="260"
+                                        Style="{StaticResource ResultCardStyle}"
+                                        MouseLeftButtonDown="GameCard_Click"
+                                        Tag="{Binding}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Game Image -->
+                                        <Border Grid.Row="0" 
+                                                Margin="8,8,8,5" 
+                                                Background="#0E1621" 
+                                                CornerRadius="3">
+                                            <Image Source="{Binding ImageUrl}" 
+                                                   Stretch="UniformToFill"
+                                                   VerticalAlignment="Center"
+                                                   HorizontalAlignment="Center"/>
+                                        </Border>
+
+                                        <!-- Game Name -->
+                                        <TextBlock Grid.Row="1" 
+                                                  Text="{Binding Name}" 
+                                                  Foreground="White"
+                                                  FontSize="13"
+                                                  FontWeight="SemiBold"
+                                                  TextTrimming="CharacterEllipsis"
+                                                  TextWrapping="Wrap"
+                                                  MaxHeight="40"
+                                                  Margin="8,0,8,5"
+                                                  TextAlignment="Center"/>
+
+                                        <!-- Release Date -->
+                                        <TextBlock Grid.Row="2" 
+                                                  Text="{Binding Released, StringFormat='Released: {0:MMM yyyy}'}" 
+                                                  Foreground="#8F98A0"
+                                                  FontSize="11"
+                                                  Margin="8,0,8,8"
+                                                  TextAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Released}" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <!-- Loading Indicator -->
+                <Border Grid.Row="2" 
+                        x:Name="LoadingPanel"
+                        Background="#CC171A21"
+                        Visibility="Collapsed"
+                        CornerRadius="5">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="🔍" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                        <TextBlock Text="Searching..." 
+                                  FontSize="18" 
+                                  Foreground="White"
+                                  HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- No Results Message -->
+                <Border Grid.Row="2"
+                        x:Name="NoResultsPanel"
+                        Visibility="Collapsed">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock Text="❌" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                        <TextBlock Text="No games found" 
+                                  FontSize="18" 
+                                  Foreground="#8F98A0"
+                                  HorizontalAlignment="Center"/>
+                        <TextBlock Text="Try a different search term" 
+                                  FontSize="14" 
+                                  Foreground="#4A5F78"
+                                  HorizontalAlignment="Center"
+                                  Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

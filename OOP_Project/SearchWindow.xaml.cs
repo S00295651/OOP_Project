@@ -26,12 +26,67 @@ namespace OOP_Project
         public SearchWindow()
         {
             InitializeComponent();
+            SearchBox.Focus(); // Auto-focus search box when window opens
+        }
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                DragMove();
+            }
+            catch { }
+        }
+
+        private void btnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        // Handle Enter key press in search box
+        private void SearchBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Search_Click(sender, null);
+            }
         }
 
         private async void Search_Click(object sender, RoutedEventArgs e)
         {
-            var games = await SearchGames(SearchBox.Text);
-            ResultsList.ItemsSource = games;
+            if (string.IsNullOrWhiteSpace(SearchBox.Text))
+            {
+                MessageBox.Show("Please enter a game name to search.", "Empty Search",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // Show loading indicator
+            LoadingPanel.Visibility = Visibility.Visible;
+            NoResultsPanel.Visibility = Visibility.Collapsed;
+            ResultsList.ItemsSource = null;
+
+            try
+            {
+                var games = await SearchGames(SearchBox.Text);
+
+                // Hide loading indicator
+                LoadingPanel.Visibility = Visibility.Collapsed;
+
+                if (games.Count > 0)
+                {
+                    ResultsList.ItemsSource = games;
+                }
+                else
+                {
+                    NoResultsPanel.Visibility = Visibility.Visible;
+                }
+            }
+            catch (Exception ex)
+            {
+                LoadingPanel.Visibility = Visibility.Collapsed;
+                MessageBox.Show($"Error searching for games: {ex.Message}", "Search Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async Task<List<Game>> SearchGames(string query)
@@ -60,11 +115,11 @@ namespace OOP_Project
             }
         }
 
-        private void ResultsList_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void GameCard_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (ResultsList.SelectedItem is Game g)
+            if (sender is Border border && border.Tag is Game game)
             {
-                GameSelected?.Invoke(g);
+                GameSelected?.Invoke(game);
                 Close();
             }
         }
