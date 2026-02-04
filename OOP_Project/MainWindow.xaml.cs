@@ -18,16 +18,23 @@ namespace OOP_Project
 {
     public partial class MainWindow : Window
     {
-        ObservableCollection<Game> Library = new ObservableCollection<Game>();
+        ObservableCollection<GameViewModel> Library { get; set; } = new ObservableCollection<GameViewModel>();
 
         public MainWindow()
         {
             InitializeComponent();
+            // Bind the ListBox to the Library collection
+            lstBxGame.ItemsSource = Library;
+            gameGrid.ItemsSource = Library;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DragMove();
+            try
+            {
+                DragMove();
+            }
+            catch { }
         }
 
         private void btnMinimize_Click(object sender, RoutedEventArgs e)
@@ -59,12 +66,59 @@ namespace OOP_Project
 
         private void AddGameToLibrary(Game game)
         {
-            Library.Add(game);
+            var gameVM = new GameViewModel(game);
+            Library.Add(gameVM);
+
+            // Select the newly added game
+            SelectGame(gameVM);
         }
 
         private void DelGame_Click(object sender, RoutedEventArgs e)
         {
+            // Get selected game
+            if (lstBxGame.SelectedItem is GameViewModel selectedGame)
+            {
+                Library.Remove(selectedGame);
+            }
+            else
+            {
+                MessageBox.Show("Please select a game to delete.", "No Selection",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
 
+        private void lstBxGame_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstBxGame.SelectedItem is GameViewModel selectedGame)
+            {
+                SelectGame(selectedGame);
+            }
+        }
+
+        private void GameCard_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Border border && border.Tag is GameViewModel game)
+            {
+                SelectGame(game);
+            }
+        }
+
+        private void SelectGame(GameViewModel game)
+        {
+            // Deselect all games
+            foreach (var g in Library)
+            {
+                g.IsSelected = false;
+            }
+
+            // Select the clicked game
+            game.IsSelected = true;
+
+            // Update ListBox selection
+            lstBxGame.SelectedItem = game;
+
+            // Scroll to the selected item in the ListBox
+            lstBxGame.ScrollIntoView(game);
         }
     }
 }

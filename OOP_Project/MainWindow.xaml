@@ -3,36 +3,279 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OOP_Project" Background="#FFF1F2F6"
+        xmlns:local="clr-namespace:OOP_Project" Background="#1B2838"
         mc:Ignorable="d" WindowStyle="None" MouseLeftButtonDown="Window_MouseLeftButtonDown"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="1000">
+    <Window.Resources>
+        <!-- Style for Game Cards -->
+        <Style x:Key="GameCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#16202D"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2A475E"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Style for Selected Game Card -->
+        <Style x:Key="SelectedGameCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#1A9FFF"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0" />
     </WindowChrome.WindowChrome>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="40" />
+            <RowDefinition Height="50" />
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Rectangle Grid.Row="0" Fill="#758BFD" />
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="btnMinimize" Content="_" Width="40" Height="40"
-                    BorderBrush="Transparent" Background="#758BFD"
+
+        <!-- Header Bar -->
+        <Rectangle Grid.Row="0" Fill="#171A21" />
+
+        <!-- Window Control Buttons -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch">
+            <Button x:Name="btnMinimize" Content="_"
+                    BorderBrush="Transparent" Background="Transparent"
                     VerticalContentAlignment="Center" Padding="0,-15,0,0"
-                    Click="btnMinimize_Click" Foreground="White" FontSize="32"/>
-            <Button x:Name="btnMaximize" Content="▢" Width="40" Height="40"
-                    BorderBrush="Transparent" Background="#758BFD"
-                    VerticalContentAlignment="Center" Padding="0,-2,0,0"
-                    Click="btnMaximize_Click" Foreground="White" FontSize="26">
+                    Click="btnMinimize_Click" Foreground="White" FontSize="32" 
+                    Width="45" Height="50">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2A475E"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
             </Button>
-            <Button x:Name="btnClose" Content="X" Width="40" Height="40"
-                    BorderBrush="Transparent" Background="#758BFD"
-                    Click="btnClose_Click" Foreground="White" FontSize="24"/>
+            <Button x:Name="btnMaximize" Content="▢"
+                    BorderBrush="Transparent" Background="Transparent"
+                    VerticalContentAlignment="Center" Padding="0,-2,0,0"
+                    Click="btnMaximize_Click" Foreground="White" FontSize="26" 
+                    Width="45" Height="50">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#2A475E"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button x:Name="btnClose" Content="X"
+                    BorderBrush="Transparent" Background="Transparent"
+                    Click="btnClose_Click" Foreground="White" FontSize="20" 
+                    Width="45" Height="50">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#C93129"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </StackPanel>
-        <TextBlock HorizontalAlignment="Left" Height="52" TextWrapping="Wrap" Width="178" FontSize="40" VerticalAlignment="Top" Margin="150,-14,0,0" FontFamily="Bauhaus 93"><Run Language="en-ie" Text="L"/><Run Text="ibrary"/></TextBlock>
-        <ListBox HorizontalAlignment="Left" Height="340" Grid.Row="1" VerticalAlignment="Center" Width="150" d:ItemsSource="{d:SampleData ItemCount=5}"/>
-        <Button x:Name="btnAddGame" Content="ADD" HorizontalAlignment="Left" Height="35" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="AddGame_Click" FontSize="20" FontFamily="Bauhaus 93"/>
-        <Button x:Name="btnDelGame" Content="DEL" HorizontalAlignment="Left" Height="35" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="DelGame_Click" FontSize="20" FontFamily="Bauhaus 93" Margin="75,0,0,0"/>
+
+        <!-- Title -->
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" 
+                   FontSize="28" VerticalAlignment="Center" Margin="20,0,0,0" 
+                   FontFamily="Segoe UI" Foreground="White" FontWeight="SemiBold">
+            <Run Text="LIBRARY"/>
+        </TextBlock>
+
+        <!-- Main Content Area -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Sidebar -->
+            <Border Grid.Column="0" Background="#171A21" Padding="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Action Buttons -->
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button x:Name="btnAddGame" Content="+ ADD" Height="35" Width="110" 
+                                Click="AddGame_Click" FontSize="14" FontWeight="Bold"
+                                Background="#5C7E10" Foreground="White" BorderBrush="Transparent"
+                                Margin="0,0,5,0">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#5C7E10"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#74A216"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <Button x:Name="btnDelGame" Content="- DEL" Height="35" Width="110" 
+                                Click="DelGame_Click" FontSize="14" FontWeight="Bold"
+                                Background="#8B1A1A" Foreground="White" BorderBrush="Transparent">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="#8B1A1A"/>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#C93129"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Game List -->
+                    <ListBox x:Name="lstBxGame" Grid.Row="1"
+                             Background="#16202D"
+                             BorderBrush="Transparent"
+                             Foreground="White"
+                             FontSize="14"
+                             SelectionChanged="lstBxGame_SelectionChanged">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="#C7D5E0"/>
+                                <Setter Property="Padding" Value="10,8"/>
+                                <Setter Property="Margin" Value="0,2"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border Background="{TemplateBinding Background}" 
+                                                    Padding="{TemplateBinding Padding}"
+                                                    CornerRadius="3">
+                                                <ContentPresenter/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#2A475E"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="#1A9FFF"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- Right Panel - Game Grid -->
+            <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto" 
+                         Background="#1B2838" Padding="20">
+                <ItemsControl x:Name="gameGrid" ItemsSource="{Binding}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Width="200" Height="280" 
+                                    x:Name="gameCard"
+                                    Style="{StaticResource GameCardStyle}"
+                                    MouseLeftButtonDown="GameCard_Click"
+                                    Tag="{Binding}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Game Image -->
+                                    <Border Grid.Row="0" Margin="8,8,8,5" 
+                                            Background="#0E1621" CornerRadius="3">
+                                        <Image Source="{Binding ImageUrl}" 
+                                               Stretch="UniformToFill"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center">
+                                            <Image.Style>
+                                                <Style TargetType="Image">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="Source" Value="{x:Null}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Image.Style>
+                                        </Image>
+                                    </Border>
+
+                                    <!-- Placeholder if no image -->
+                                    <TextBlock Grid.Row="0" 
+                                              Text="No Image" 
+                                              Foreground="#4A5F78"
+                                              FontSize="16"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ImageUrl}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding ImageUrl}" Value="">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+
+                                    <!-- Game Name -->
+                                    <TextBlock Grid.Row="1" 
+                                              Text="{Binding Name}" 
+                                              Foreground="White"
+                                              FontSize="14"
+                                              FontWeight="SemiBold"
+                                              TextTrimming="CharacterEllipsis"
+                                              Margin="8,0,8,8"
+                                              TextAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                    <Setter TargetName="gameCard" Property="Style" Value="{StaticResource SelectedGameCardStyle}"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Grid>
     </Grid>
 </Window>
-
