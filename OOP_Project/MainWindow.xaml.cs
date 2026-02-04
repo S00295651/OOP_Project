@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,11 +16,10 @@ using System.Windows.Shapes;
 
 namespace OOP_Project
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
+        ObservableCollection<Game> Library = new ObservableCollection<Game>();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -48,6 +48,23 @@ namespace OOP_Project
         {
             Close();
             //Application.Current.Shutdown();
+        }
+
+        private void AddGame_Click(object sender, RoutedEventArgs e)
+        {
+            var searchWindow = new SearchWindow();
+            searchWindow.GameSelected += AddGameToLibrary;
+            searchWindow.ShowDialog();
+        }
+
+        private void AddGameToLibrary(Game game)
+        {
+            Library.Add(game);
+        }
+
+        private void DelGame_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

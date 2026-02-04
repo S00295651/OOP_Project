@@ -29,5 +29,10 @@
                     BorderBrush="Transparent" Background="#758BFD"
                     Click="btnClose_Click" Foreground="White" FontSize="24"/>
         </StackPanel>
+        <TextBlock HorizontalAlignment="Left" Height="52" TextWrapping="Wrap" Width="178" FontSize="40" VerticalAlignment="Top" Margin="150,-14,0,0" FontFamily="Bauhaus 93"><Run Language="en-ie" Text="L"/><Run Text="ibrary"/></TextBlock>
+        <ListBox HorizontalAlignment="Left" Height="340" Grid.Row="1" VerticalAlignment="Center" Width="150" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+        <Button x:Name="btnAddGame" Content="ADD" HorizontalAlignment="Left" Height="35" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="AddGame_Click" FontSize="20" FontFamily="Bauhaus 93"/>
+        <Button x:Name="btnDelGame" Content="DEL" HorizontalAlignment="Left" Height="35" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="DelGame_Click" FontSize="20" FontFamily="Bauhaus 93" Margin="75,0,0,0"/>
     </Grid>
 </Window>
+
