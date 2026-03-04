@@ -74,11 +74,10 @@
                     MouseLeftButtonDown="Window_MouseLeftButtonDown">
                 <Grid>
                     <TextBlock Text="SEARCH GAMES" 
-                              FontSize="20" 
-                              FontWeight="SemiBold"
+                              FontSize="20"
                               Foreground="White"
                               VerticalAlignment="Center"
-                              Margin="20,0,0,0"/>
+                              Margin="20,0,0,0" FontFamily="Bauhaus 93"/>
 
                     <!-- Close Button -->
                     <Button Content="✕" 
@@ -132,7 +131,7 @@
                                 FontSize="16"
                                 Padding="15,12"
                                 VerticalContentAlignment="Center"
-                                KeyDown="SearchBox_KeyDown">
+                                KeyDown="SearchBox_KeyDown" FontFamily="Bauhaus 93">
                             <TextBox.Style>
                                 <Style TargetType="TextBox">
                                     <Setter Property="Template">

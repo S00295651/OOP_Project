@@ -55,7 +55,7 @@ namespace OOP_Project
         {
             if (string.IsNullOrWhiteSpace(SearchBox.Text))
             {
-                MessageBox.Show("Please enter a game name to search.", "Empty Search",
+                MessageBox.Show("Please enter a game name to search", "Empty Search",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }

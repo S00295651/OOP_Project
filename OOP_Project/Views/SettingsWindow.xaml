@@ -1,0 +1,392 @@
+﻿<Window x:Class="OOP_Project.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Profile &amp; Settings" Height="620" Width="800"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    <Border CornerRadius="0" Background="#1B2838" BorderBrush="#2A475E" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Rectangle Grid.Row="0" Fill="#171A21"/>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                <materialDesign:PackIcon Kind="AccountCircle" Foreground="#66C0F4"
+                                         Width="20" Height="20" VerticalAlignment="Center"/>
+                <TextBlock Text="PROFILE &amp; SETTINGS" Foreground="White" FontSize="14"
+                           FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Close Button -->
+            <Button x:Name="btnClose" Click="btnClose_Click"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Right"
+                    Width="45" Background="Transparent" BorderBrush="Transparent"
+                    Grid.Row="0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value="✕"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#C93129"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Main Content: Left nav + Right panel -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Navigation -->
+                <Border Grid.Column="0" Background="#171A21">
+                    <StackPanel Margin="0,15,0,0">
+
+                        <Border x:Name="navProfile" Background="#2A475E" Cursor="Hand"
+                                Padding="20,12" MouseLeftButtonDown="NavItem_Click" Tag="Profile">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="AccountCircle" Foreground="#66C0F4"
+                                                         Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Profile" Foreground="White" FontSize="14"
+                                           Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="navAppearance" Background="Transparent" Cursor="Hand"
+                                Padding="20,12" MouseLeftButtonDown="NavItem_Click" Tag="Appearance">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1E2A38"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Palette" Foreground="#C7D5E0"
+                                                         Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Appearance" Foreground="#C7D5E0" FontSize="14"
+                                           Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="navLibrary" Background="Transparent" Cursor="Hand"
+                                Padding="20,12" MouseLeftButtonDown="NavItem_Click" Tag="Library">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1E2A38"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="BookOpenVariant" Foreground="#C7D5E0"
+                                                         Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="Library" Foreground="#C7D5E0" FontSize="14"
+                                           Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="navApi" Background="Transparent" Cursor="Hand"
+                                Padding="20,12" MouseLeftButtonDown="NavItem_Click" Tag="API">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1E2A38"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="Api" Foreground="#C7D5E0"
+                                                         Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="API" Foreground="#C7D5E0" FontSize="14"
+                                           Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border x:Name="navAbout" Background="Transparent" Cursor="Hand"
+                                Padding="20,12" MouseLeftButtonDown="NavItem_Click" Tag="About">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#1E2A38"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="InformationOutline" Foreground="#C7D5E0"
+                                                         Width="18" Height="18" VerticalAlignment="Center"/>
+                                <TextBlock Text="About" Foreground="#C7D5E0" FontSize="14"
+                                           Margin="12,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </Border>
+
+                <!-- Right Content Panel (swapped via code-behind) -->
+                <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="contentPanel" Margin="30,25,30,25">
+
+                        <!-- ── PROFILE SECTION (default visible) ── -->
+                        <StackPanel x:Name="sectionProfile">
+                            <TextBlock Text="PROFILE" Foreground="#66C0F4" FontSize="12"
+                                       FontWeight="Bold" Margin="0,0,0,20"/>
+
+                            <!-- Avatar + Username -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,25">
+                                <Border Width="80" Height="80" CornerRadius="40"
+                                        Background="#2A475E" BorderBrush="#66C0F4" BorderThickness="2">
+                                    <materialDesign:PackIcon Kind="AccountCircle" Foreground="#66C0F4"
+                                                             Width="50" Height="50"
+                                                             HorizontalAlignment="Center"
+                                                             VerticalAlignment="Center"/>
+                                </Border>
+                                <StackPanel VerticalAlignment="Center" Margin="20,0,0,0">
+                                    <TextBlock Text="USERNAME" Foreground="#4A6880" FontSize="11" Margin="0,0,0,4"/>
+                                    <TextBlock x:Name="txtUsername" Text="Player" Foreground="White"
+                                               FontSize="22" FontWeight="Bold"/>
+                                    <TextBlock x:Name="txtMemberSince" Text="Member since —"
+                                               Foreground="#C7D5E0" FontSize="12" Margin="0,4,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- Username Field -->
+                            <TextBlock Text="Display Name" Foreground="#4A6880" FontSize="11" Margin="0,0,0,6"/>
+                            <Border Background="#16202D" BorderBrush="#2A475E" BorderThickness="1"
+                                    CornerRadius="3" Padding="12,10" Margin="0,0,0,20">
+                                <TextBox x:Name="txtEditUsername" Background="Transparent"
+                                         BorderBrush="Transparent" Foreground="White"
+                                         FontSize="14" Text="Player"
+                                         CaretBrush="White"/>
+                            </Border>
+
+                            <!-- Favourite Genre Field -->
+                            <TextBlock Text="Favourite Genre" Foreground="#4A6880" FontSize="11" Margin="0,0,0,6"/>
+                            <Border Background="#16202D" BorderBrush="#2A475E" BorderThickness="1"
+                                    CornerRadius="3" Padding="12,10" Margin="0,0,0,20">
+                                <TextBox x:Name="txtFavGenre" Background="Transparent"
+                                         BorderBrush="Transparent" Foreground="White"
+                                         FontSize="14" Text=""
+                                         CaretBrush="White"/>
+                            </Border>
+
+                            <!-- Bio Field -->
+                            <TextBlock Text="Bio" Foreground="#4A6880" FontSize="11" Margin="0,0,0,6"/>
+                            <Border Background="#16202D" BorderBrush="#2A475E" BorderThickness="1"
+                                    CornerRadius="3" Padding="12,10" Margin="0,0,0,20">
+                                <TextBox x:Name="txtBio" Background="Transparent"
+                                         BorderBrush="Transparent" Foreground="White"
+                                         FontSize="14" AcceptsReturn="True" Height="80"
+                                         TextWrapping="Wrap" VerticalAlignment="Top"
+                                         Text="" CaretBrush="White"/>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- ── APPEARANCE SECTION (hidden by default) ── -->
+                        <StackPanel x:Name="sectionAppearance" Visibility="Collapsed">
+                            <TextBlock Text="APPEARANCE" Foreground="#66C0F4" FontSize="12"
+                                       FontWeight="Bold" Margin="0,0,0,20"/>
+
+                            <!-- Default View -->
+                            <TextBlock Text="Default Library View" Foreground="#4A6880" FontSize="11" Margin="0,0,0,10"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,25">
+                                <RadioButton x:Name="rbGrid" Content="Grid" Foreground="White"
+                                             IsChecked="True" Margin="0,0,20,0"/>
+                                <RadioButton x:Name="rbList" Content="List" Foreground="White"/>
+                            </StackPanel>
+
+                            <!-- Accent Color -->
+                            <TextBlock Text="Accent Colour" Foreground="#4A6880" FontSize="11" Margin="0,0,0,10"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,25">
+                                <Border Width="32" Height="32" CornerRadius="16" Background="#66C0F4"
+                                        Margin="0,0,10,0" Cursor="Hand" BorderBrush="White" BorderThickness="2"/>
+                                <Border Width="32" Height="32" CornerRadius="16" Background="#1A9FFF"
+                                        Margin="0,0,10,0" Cursor="Hand"/>
+                                <Border Width="32" Height="32" CornerRadius="16" Background="#6C8F22"
+                                        Margin="0,0,10,0" Cursor="Hand"/>
+                                <Border Width="32" Height="32" CornerRadius="16" Background="#FC9802"
+                                        Margin="0,0,10,0" Cursor="Hand"/>
+                                <Border Width="32" Height="32" CornerRadius="16" Background="#C93129"
+                                        Cursor="Hand"/>
+                            </StackPanel>
+
+                            <TextBlock Text="These settings will be functional in a future update."
+                                       Foreground="#4A6880" FontSize="12" FontStyle="Italic"/>
+                        </StackPanel>
+
+                        <!-- ── LIBRARY SECTION (hidden by default) ── -->
+                        <StackPanel x:Name="sectionLibrary" Visibility="Collapsed">
+                            <TextBlock Text="LIBRARY" Foreground="#66C0F4" FontSize="12"
+                                       FontWeight="Bold" Margin="0,0,0,20"/>
+
+                            <!-- Ratings File Path -->
+                            <TextBlock Text="Ratings Save File" Foreground="#4A6880" FontSize="11" Margin="0,0,0,6"/>
+                            <Border Background="#16202D" BorderBrush="#2A475E" BorderThickness="1"
+                                    CornerRadius="3" Padding="12,10" Margin="0,0,0,20">
+                                <TextBox x:Name="txtRatingsPath" Background="Transparent"
+                                         BorderBrush="Transparent" Foreground="#C7D5E0"
+                                         FontSize="13" IsReadOnly="True"
+                                         Text="user_ratings.json"/>
+                            </Border>
+
+                            <!-- Auto-save toggle placeholder -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                <CheckBox x:Name="chkAutoSave" IsChecked="True"
+                                          Foreground="White" VerticalAlignment="Center"/>
+                                <TextBlock Text="Auto-save ratings on change" Foreground="White"
+                                           FontSize="14" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <TextBlock Text="These settings will be functional in a future update."
+                                       Foreground="#4A6880" FontSize="12" FontStyle="Italic"/>
+                        </StackPanel>
+
+                        <!-- ── API SECTION (hidden by default) ── -->
+                        <StackPanel x:Name="sectionApi" Visibility="Collapsed">
+                            <TextBlock Text="API CONFIGURATION" Foreground="#66C0F4" FontSize="12"
+                                       FontWeight="Bold" Margin="0,0,0,20"/>
+
+                            <TextBlock Text="RAWG API Key" Foreground="#4A6880" FontSize="11" Margin="0,0,0,6"/>
+                            <Border Background="#16202D" BorderBrush="#2A475E" BorderThickness="1"
+                                    CornerRadius="3" Padding="12,10" Margin="0,0,0,10">
+                                <TextBox x:Name="txtApiKey" Background="Transparent"
+                                         BorderBrush="Transparent" Foreground="White"
+                                         FontSize="13" Text="••••••••••••••••••••••••••••••••"
+                                         CaretBrush="White"/>
+                            </Border>
+                            <TextBlock Text="Get a free key at rawg.io/apidocs" Foreground="#4A6880"
+                                       FontSize="12" Margin="0,0,0,25" Cursor="Hand">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Foreground" Value="#66C0F4"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+                            <TextBlock Text="These settings will be functional in a future update."
+                                       Foreground="#4A6880" FontSize="12" FontStyle="Italic"/>
+                        </StackPanel>
+
+                        <!-- ── ABOUT SECTION (hidden by default) ── -->
+                        <StackPanel x:Name="sectionAbout" Visibility="Collapsed">
+                            <TextBlock Text="ABOUT" Foreground="#66C0F4" FontSize="12"
+                                       FontWeight="Bold" Margin="0,0,0,20"/>
+
+                            <StackPanel HorizontalAlignment="Center" Margin="0,20,0,30">
+                                <materialDesign:PackIcon Kind="Gamepad" Foreground="#66C0F4"
+                                                         Width="64" Height="64"
+                                                         HorizontalAlignment="Center"/>
+                                <TextBlock Text="Game Library" Foreground="White" FontSize="24"
+                                           FontWeight="Bold" HorizontalAlignment="Center" Margin="0,12,0,4"/>
+                                <TextBlock Text="Version 1.0.0" Foreground="#C7D5E0" FontSize="13"
+                                           HorizontalAlignment="Center"/>
+                                <TextBlock Text="OOP Project · 2025" Foreground="#4A6880" FontSize="12"
+                                           HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                            </StackPanel>
+
+                            <Rectangle Height="1" Fill="#2A475E" Margin="0,0,0,20"/>
+                            <TextBlock Text="Built with WPF · Material Design · RAWG API"
+                                       Foreground="#4A6880" FontSize="12" HorizontalAlignment="Center"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- Footer Buttons -->
+            <Border Grid.Row="2" Background="#171A21" BorderBrush="#2A475E" BorderThickness="0,1,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Margin="0,0,20,0">
+
+                    <Button x:Name="btnCancel" Content="Cancel" Click="btnCancel_Click"
+                            Width="90" Height="34" Margin="0,0,10,0"
+                            Background="Transparent" BorderBrush="#2A475E"
+                            Foreground="#C7D5E0" FontSize="13" Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="1" CornerRadius="3">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#2A475E"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button x:Name="btnSave" Content="Save Changes" Click="btnSave_Click"
+                            Width="120" Height="34"
+                            Background="#1A9FFF" BorderBrush="Transparent"
+                            Foreground="White" FontSize="13" FontWeight="Bold" Cursor="Hand">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}"
+                                                    CornerRadius="3">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#0F7ACC"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                </StackPanel>
+            </Border>
+
+        </Grid>
+    </Border>
+</Window>

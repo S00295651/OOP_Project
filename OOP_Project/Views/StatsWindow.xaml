@@ -1,0 +1,198 @@
+﻿<Window x:Class="OOP_Project.StatsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Library Statistics" Height="650" Width="900"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    <Border CornerRadius="0" Background="#1B2838" BorderBrush="#2A475E" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Title Bar -->
+            <Rectangle Grid.Row="0" Fill="#171A21"/>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                <materialDesign:PackIcon Kind="ChartBar" Foreground="#66C0F4" Width="20" Height="20" VerticalAlignment="Center"/>
+                <TextBlock Text="LIBRARY STATISTICS" Foreground="White" FontSize="14"
+                           FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- Close Button -->
+            <Button x:Name="btnClose" Click="btnClose_Click"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Right"
+                    Width="45" Background="Transparent" BorderBrush="Transparent"
+                    Grid.Row="0">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value="✕"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontSize" Value="16"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#C93129"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Main Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="30,25,30,30">
+
+                    <!-- Summary Cards Row -->
+                    <TextBlock Text="OVERVIEW" Foreground="#66C0F4" FontSize="12"
+                               FontWeight="Bold" Margin="0,0,0,12"/>
+
+                    <UniformGrid Columns="4" Margin="0,0,0,25">
+
+                        <!-- Total Games -->
+                        <Border Background="#16202D" CornerRadius="4" Margin="0,0,10,0" Padding="20,15">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="Gamepad" Foreground="#66C0F4"
+                                                         Width="28" Height="28" Margin="0,0,0,8"/>
+                                <TextBlock Text="—" Foreground="White" FontSize="28"
+                                           FontWeight="Bold" x:Name="txtTotalGames"/>
+                                <TextBlock Text="Total Games" Foreground="#C7D5E0" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Average Rating -->
+                        <Border Background="#16202D" CornerRadius="4" Margin="0,0,10,0" Padding="20,15">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="Star" Foreground="#FFD700"
+                                                         Width="28" Height="28" Margin="0,0,0,8"/>
+                                <TextBlock Text="—" Foreground="White" FontSize="28"
+                                           FontWeight="Bold" x:Name="txtAvgRating"/>
+                                <TextBlock Text="Avg. Your Rating" Foreground="#C7D5E0" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Rated Games -->
+                        <Border Background="#16202D" CornerRadius="4" Margin="0,0,10,0" Padding="20,15">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="CheckCircle" Foreground="#6C8F22"
+                                                         Width="28" Height="28" Margin="0,0,0,8"/>
+                                <TextBlock Text="—" Foreground="White" FontSize="28"
+                                           FontWeight="Bold" x:Name="txtRatedGames"/>
+                                <TextBlock Text="Rated Games" Foreground="#C7D5E0" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Most Common Genre -->
+                        <Border Background="#16202D" CornerRadius="4" Padding="20,15">
+                            <StackPanel>
+                                <materialDesign:PackIcon Kind="Tag" Foreground="#1A9FFF"
+                                                         Width="28" Height="28" Margin="0,0,0,8"/>
+                                <TextBlock Text="—" Foreground="White" FontSize="18"
+                                           FontWeight="Bold" x:Name="txtTopGenre" TextWrapping="Wrap"/>
+                                <TextBlock Text="Top Genre" Foreground="#C7D5E0" FontSize="12"/>
+                            </StackPanel>
+                        </Border>
+
+                    </UniformGrid>
+
+                    <!-- Chart Placeholders Row -->
+                    <Grid Margin="0,0,0,25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Genre Distribution Chart -->
+                        <Border Grid.Column="0" Background="#16202D" CornerRadius="4" Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="GENRE DISTRIBUTION" Foreground="#66C0F4"
+                                           FontSize="12" FontWeight="Bold" Margin="0,0,0,15"/>
+                                <Border Height="200" Background="#1B2838" CornerRadius="4"
+                                        BorderBrush="#2A475E" BorderThickness="1">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChartPie" Foreground="#2A475E"
+                                                                 Width="48" Height="48" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Chart coming soon" Foreground="#4A6880"
+                                                   FontSize="13" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Rating Distribution Chart -->
+                        <Border Grid.Column="2" Background="#16202D" CornerRadius="4" Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="YOUR RATING BREAKDOWN" Foreground="#66C0F4"
+                                           FontSize="12" FontWeight="Bold" Margin="0,0,0,15"/>
+                                <Border Height="200" Background="#1B2838" CornerRadius="4"
+                                        BorderBrush="#2A475E" BorderThickness="1">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <materialDesign:PackIcon Kind="ChartBar" Foreground="#2A475E"
+                                                                 Width="48" Height="48" HorizontalAlignment="Center"/>
+                                        <TextBlock Text="Chart coming soon" Foreground="#4A6880"
+                                                   FontSize="13" Margin="0,10,0,0" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- Top Rated Games Placeholder -->
+                    <Border Background="#16202D" CornerRadius="4" Padding="20">
+                        <StackPanel>
+                            <TextBlock Text="TOP RATED IN YOUR LIBRARY" Foreground="#66C0F4"
+                                       FontSize="12" FontWeight="Bold" Margin="0,0,0,15"/>
+
+                            <!-- Table Header -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="#" Foreground="#4A6880" FontSize="12" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="1" Text="GAME" Foreground="#4A6880" FontSize="12" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="2" Text="GENRE" Foreground="#4A6880" FontSize="12" FontWeight="Bold"/>
+                                <TextBlock Grid.Column="3" Text="YOUR RATING" Foreground="#4A6880"
+                                           FontSize="12" FontWeight="Bold" HorizontalAlignment="Right"/>
+                            </Grid>
+
+                            <Rectangle Height="1" Fill="#2A475E" Margin="0,0,0,10"/>
+
+                            <!-- Placeholder Rows -->
+                            <ItemsControl x:Name="lstTopGames">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <!-- Rows will be populated here -->
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <!-- Empty state -->
+                            <StackPanel x:Name="emptyTopGames" HorizontalAlignment="Center" Margin="0,20">
+                                <TextBlock Text="Your top games will appear here once you rate them."
+                                           Foreground="#4A6880" FontSize="13" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</Window>

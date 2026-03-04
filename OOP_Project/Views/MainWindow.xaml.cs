@@ -20,12 +20,64 @@ namespace OOP_Project
     {
         ObservableCollection<GameViewModel> Library { get; set; } = new ObservableCollection<GameViewModel>();
 
+        private readonly FirebaseDataService _dataService = new FirebaseDataService();
+
         public MainWindow()
         {
             InitializeComponent();
-            // Bind the ListBox to the Library collection
             lstBxGame.ItemsSource = Library;
             gameGrid.ItemsSource = Library;
+
+            Loaded += async (s, e) => await LoadLibraryFromFirebase();
+        }
+
+        private async Task LoadLibraryFromFirebase()
+        {
+            try
+            {
+                var games = await _dataService.LoadLibraryAsync();
+                Library.Clear();
+                foreach (var game in games)
+                    Library.Add(new GameViewModel(game));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not load library: {ex.Message}", "Sync Error",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private async void SaveLibraryToFirebase()
+        {
+            try
+            {
+                await _dataService.SaveLibraryAsync(Library.Select(vm => vm.Game));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not save library: {ex.Message}", "Sync Error",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+        }
+
+        private async void SaveRatingsToFirebase()
+        {
+            try
+            {
+                if (System.IO.File.Exists("user_ratings.json"))
+                {
+                    var json = System.IO.File.ReadAllText("user_ratings.json");
+                    var ratings = System.Text.Json.JsonSerializer
+                                        .Deserialize<System.Collections.Generic.Dictionary<int, int>>(json);
+                    if (ratings != null)
+                        await _dataService.SaveRatingsAsync(ratings);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not sync ratings: {ex.Message}", "Sync Error",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -71,6 +123,7 @@ namespace OOP_Project
 
             // Select the newly added game
             SelectGame(gameVM);
+            SaveLibraryToFirebase();
         }
 
         private void DelGame_Click(object sender, RoutedEventArgs e)
@@ -79,6 +132,7 @@ namespace OOP_Project
             if (lstBxGame.SelectedItem is GameViewModel selectedGame)
             {
                 Library.Remove(selectedGame);
+                SaveLibraryToFirebase();
             }
             else
             {
@@ -90,27 +144,15 @@ namespace OOP_Project
         private void lstBxGame_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (lstBxGame.SelectedItem is GameViewModel selectedGame)
-            {
                 SelectGame(selectedGame);
-            }
         }
 
         private void GameCard_Click(object sender, MouseButtonEventArgs e)
         {
             if (sender is Border border && border.Tag is GameViewModel game)
             {
-                // 1. Check if this game is already the selected one
-                // (Assuming you have a variable or property tracking the selected game)
-                if (game.IsSelected)
-                {
-                    // If it's already selected, open the details window
-                    ShowGameDetails(game.Game);
-                }
-                else
-                {
-                    // 2. If it's not selected, select it now
-                    SelectGame(game);
-                }
+                if (game.IsSelected) ShowGameDetails(game.Game);
+                else SelectGame(game);
             }
         }
 
@@ -155,6 +197,20 @@ namespace OOP_Project
         {
             GameDetailsWindow gameDetailWindow = new GameDetailsWindow(game);
             gameDetailWindow.ShowDialog();
+        }
+
+        private void btnStats_Click(object sender, RoutedEventArgs e)
+        {
+            var statsWindow = new StatsWindow(Library);
+            statsWindow.Owner = this;
+            statsWindow.ShowDialog();
+        }
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsWindow = new SettingsWindow();
+            settingsWindow.Owner = this;
+            settingsWindow.ShowDialog();
         }
     }
 }

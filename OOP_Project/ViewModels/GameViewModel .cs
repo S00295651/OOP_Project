@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OOP_Project
 {
-    internal class GameViewModel
+    public class GameViewModel
     {
         private bool _isSelected;
         private Game _game;
