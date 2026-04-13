@@ -89,7 +89,7 @@ namespace OOP_Project
                     var dataService = new FirebaseDataService();
                     await dataService.SaveProfileAsync(new UserProfile
                     {
-                        Username = email.Split('@')[0], // sensible default username
+                        Username = email.Split('@')[0],
                         MemberSince = DateTime.Now.ToString("MMMM yyyy")
                     });
                 }
@@ -98,9 +98,7 @@ namespace OOP_Project
                     await _auth.LoginAsync(email, password);
                 }
 
-                // Success, open the main window
-                var main = new MainWindow();
-                main.Show();
+                // The caller will handle navigation
                 Close();
             }
             catch (Exception ex)

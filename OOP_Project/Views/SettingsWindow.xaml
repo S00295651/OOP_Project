@@ -211,6 +211,32 @@
                                          TextWrapping="Wrap" VerticalAlignment="Top"
                                          Text="" CaretBrush="White"/>
                             </Border>
+
+                            <!-- Login Button -->
+                            <Rectangle Height="1" Fill="#2A475E" Margin="0,0,0,20"/>
+                            <Button x:Name="btnLogin" Content="Login" Click="btnLogin_Click"
+                                    HorizontalAlignment="Left" Width="120" Height="34"
+                                    Background="#1A9FFF" BorderBrush="Transparent"
+                                    Foreground="White" FontSize="13" FontWeight="Bold" Cursor="Hand">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="3">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#0F7ACC"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
                         </StackPanel>
 
                         <!-- ── APPEARANCE SECTION (hidden by default) ── -->

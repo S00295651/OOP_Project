@@ -24,6 +24,8 @@ namespace OOP_Project
 
         private async void LoadProfile()
         {
+            if (!UserSession.IsLoggedIn) return;
+
             try
             {
                 var profile = await _dataService.LoadProfileAsync();
@@ -43,6 +45,13 @@ namespace OOP_Project
 
         private async System.Threading.Tasks.Task SaveProfileAsync()
         {
+            if (!UserSession.IsLoggedIn)
+            {
+                MessageBox.Show("You must be logged in to save your profile.", "Not logged in",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
             // Load existing profile first to preserve MemberSince
             string memberSince = DateTime.Now.ToString("MMMM yyyy");
             try
@@ -76,6 +85,22 @@ namespace OOP_Project
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void btnLogin_Click(object sender, RoutedEventArgs e)
+        {
+            var loginWindow = new LoginWindow();
+            loginWindow.Owner = this;
+            loginWindow.ShowDialog();
+
+            if (!UserSession.IsLoggedIn) return;
+
+            // Login succeeded (open a fresh MainWindow close Settings + old MainWindow)
+            var oldMain = this.Owner;
+            var newMain = new MainWindow();
+            newMain.Show();
+            Close();
+            oldMain?.Close();
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)

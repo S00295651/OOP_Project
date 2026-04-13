@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OOP_Project
 {
-    public class GameViewModel
+    public class GameViewModel : INotifyPropertyChanged
     {
         private bool _isSelected;
         private Game _game;

@@ -261,7 +261,7 @@
                                     </Grid.RowDefinitions>
 
                                     <!-- Game Image -->
-                                    <Border Grid.Row="0" Margin="8,8,8,5" 
+                                    <Border x:Name="imageBorder" Grid.Row="0" Margin="8,8,8,5" 
                                             Background="#0E1621" CornerRadius="3">
                                         <Image Source="{Binding ImageUrl}" 
                                                Stretch="UniformToFill"
@@ -315,6 +315,9 @@
                             <DataTemplate.Triggers>
                                 <DataTrigger Binding="{Binding IsSelected}" Value="True">
                                     <Setter TargetName="gameCard" Property="Style" Value="{StaticResource SelectedGameCardStyle}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected}" Value="False">
+                                    <Setter TargetName="gameCard" Property="Style" Value="{StaticResource GameCardStyle}"/>
                                 </DataTrigger>
                             </DataTemplate.Triggers>
                         </DataTemplate>

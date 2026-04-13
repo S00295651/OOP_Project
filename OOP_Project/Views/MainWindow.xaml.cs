@@ -33,6 +33,8 @@ namespace OOP_Project
 
         private async Task LoadLibraryFromFirebase()
         {
+            if (!UserSession.IsLoggedIn) return;
+
             try
             {
                 var games = await _dataService.LoadLibraryAsync();
@@ -49,6 +51,8 @@ namespace OOP_Project
 
         private async void SaveLibraryToFirebase()
         {
+            if (!UserSession.IsLoggedIn) return;
+
             try
             {
                 await _dataService.SaveLibraryAsync(Library.Select(vm => vm.Game));
@@ -62,6 +66,8 @@ namespace OOP_Project
 
         private async void SaveRatingsToFirebase()
         {
+            if (!UserSession.IsLoggedIn) return;
+
             try
             {
                 if (System.IO.File.Exists("user_ratings.json"))
