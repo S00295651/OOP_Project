@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OOP_Project.Services;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Windows;
@@ -47,12 +49,11 @@ namespace OOP_Project
         {
             if (!UserSession.IsLoggedIn)
             {
-                MessageBox.Show("You must be logged in to save your profile.", "Not logged in",
+                MessageBox.Show("You must be logged in to save your profile", "Not logged in",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
-            // Load existing profile first to preserve MemberSince
             string memberSince = DateTime.Now.ToString("MMMM yyyy");
             try
             {
@@ -72,9 +73,9 @@ namespace OOP_Project
 
             await _dataService.SaveProfileAsync(profile);
 
-            // Refresh header labels
             txtUsername.Text = profile.Username;
             txtMemberSince.Text = $"Member since {profile.MemberSince}";
+            txtSteamId.Text = profile.SteamId ?? "";
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -95,12 +96,66 @@ namespace OOP_Project
 
             if (!UserSession.IsLoggedIn) return;
 
-            // Login succeeded (open a fresh MainWindow close Settings + old MainWindow)
+            // Login success
             var oldMain = this.Owner;
             var newMain = new MainWindow();
             newMain.Show();
             Close();
             oldMain?.Close();
+        }
+
+        private async void btnImportSteam_Click(object sender, RoutedEventArgs e)
+        {
+            var steamId = txtSteamId.Text.Trim();
+            if (string.IsNullOrWhiteSpace(steamId))
+            {
+                MessageBox.Show("Please enter your Steam ID first", "Steam ID required",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            btnImportSteam.IsEnabled = false;
+            btnImportSteam.Content = "Importing...";
+
+            try
+            {
+                var steamService = new SteamApiService();
+                var steamGames = await steamService.GetOwnedGamesAsync(steamId);
+
+                if (steamGames.Count == 0)
+                {
+                    MessageBox.Show("No games found, make sure your Steam profile is public",
+                        "No games found", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Merge existing firebase library
+                var existingGames = new List<Game>();
+                try { existingGames = await _dataService.LoadLibraryAsync(); } catch { }
+
+                var existingIds = new HashSet<int>(existingGames.ConvertAll(g => g.Id));
+                var newGames = steamGames.FindAll(g => !existingIds.Contains(g.Id));
+                existingGames.AddRange(newGames);
+
+                await _dataService.SaveLibraryAsync(existingGames);
+
+                // Reload MainWindow library
+                if (Owner is MainWindow mainWindow)
+                    await mainWindow.ReloadLibraryAsync();
+
+                MessageBox.Show($"Imported {newGames.Count} new games from Steam",
+                    "Import successful", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Import failed: {ex.Message}", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                btnImportSteam.IsEnabled = true;
+                btnImportSteam.Content = "Import Steam Library";
+            }
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -141,7 +196,6 @@ namespace OOP_Project
                 (Color)ColorConverter.ConvertFromString("#2A475E"));
             _activeNav = clicked;
 
-            // Hide all sections, then show the matching one
             sectionProfile.Visibility = Visibility.Collapsed;
             sectionAppearance.Visibility = Visibility.Collapsed;
             sectionLibrary.Visibility = Visibility.Collapsed;

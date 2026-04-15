@@ -154,11 +154,11 @@
                     </StackPanel>
                 </Border>
 
-                <!-- Right Content Panel (swapped via code-behind) -->
+                <!-- Right Content Panel -->
                 <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
                     <StackPanel x:Name="contentPanel" Margin="30,25,30,25">
 
-                        <!-- ── PROFILE SECTION (default visible) ── -->
+                        <!-- PROFILE SECTION -->
                         <StackPanel x:Name="sectionProfile">
                             <TextBlock Text="PROFILE" Foreground="#66C0F4" FontSize="12"
                                        FontWeight="Bold" Margin="0,0,0,20"/>
@@ -237,9 +237,54 @@
                                     </Style>
                                 </Button.Style>
                             </Button>
+                            
+                            <!-- Steam Section -->
+                            <Rectangle Height="1" Fill="#2A475E" Margin="0,25,0,20"/>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                <materialDesign:PackIcon Kind="Steam" Foreground="#66C0F4"
+                                                         Width="16" Height="16" VerticalAlignment="Center"/>
+                                <TextBlock Text="STEAM" Foreground="#66C0F4" FontSize="12"
+                                           FontWeight="Bold" Margin="6,0,0,0" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="Steam ID" Foreground="#4A6880" FontSize="11" Margin="0,0,0,6"/>
+                            <Border Background="#16202D" BorderBrush="#2A475E" BorderThickness="1"
+                                    CornerRadius="3" Padding="12,10" Margin="0,0,0,10">
+                                <TextBox x:Name="txtSteamId" Background="Transparent"
+                                         BorderBrush="Transparent" Foreground="White"
+                                         FontSize="14" Text=""
+                                         CaretBrush="White"/>
+                            </Border>
+                            <TextBlock Text="Your 17-digit SteamID64 (find it at steamid.io)"
+                                       Foreground="#4A6880" FontSize="11" Margin="0,0,0,15"/>
+                            <Button x:Name="btnImportSteam" Content="Import Steam Library" Click="btnImportSteam_Click"
+                                    HorizontalAlignment="Left" Height="34"
+                                    Background="#1B2838" BorderBrush="#4A6880" BorderThickness="1"
+                                    Foreground="White" FontSize="13" FontWeight="Bold" Cursor="Hand" Padding="16,0">
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#2A475E"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
                         </StackPanel>
 
-                        <!-- ── APPEARANCE SECTION (hidden by default) ── -->
+                        <!-- APPEARANCE SECTION -->
                         <StackPanel x:Name="sectionAppearance" Visibility="Collapsed">
                             <TextBlock Text="APPEARANCE" Foreground="#66C0F4" FontSize="12"
                                        FontWeight="Bold" Margin="0,0,0,20"/>
@@ -271,7 +316,7 @@
                                        Foreground="#4A6880" FontSize="12" FontStyle="Italic"/>
                         </StackPanel>
 
-                        <!-- ── LIBRARY SECTION (hidden by default) ── -->
+                        <!-- LIBRARY SECTION -->
                         <StackPanel x:Name="sectionLibrary" Visibility="Collapsed">
                             <TextBlock Text="LIBRARY" Foreground="#66C0F4" FontSize="12"
                                        FontWeight="Bold" Margin="0,0,0,20"/>
@@ -298,7 +343,7 @@
                                        Foreground="#4A6880" FontSize="12" FontStyle="Italic"/>
                         </StackPanel>
 
-                        <!-- ── API SECTION (hidden by default) ── -->
+                        <!-- API SECTION -->
                         <StackPanel x:Name="sectionApi" Visibility="Collapsed">
                             <TextBlock Text="API CONFIGURATION" Foreground="#66C0F4" FontSize="12"
                                        FontWeight="Bold" Margin="0,0,0,20"/>
@@ -328,7 +373,7 @@
                                        Foreground="#4A6880" FontSize="12" FontStyle="Italic"/>
                         </StackPanel>
 
-                        <!-- ── ABOUT SECTION (hidden by default) ── -->
+                        <!-- ABOUT SECTION -->
                         <StackPanel x:Name="sectionAbout" Visibility="Collapsed">
                             <TextBlock Text="ABOUT" Foreground="#66C0F4" FontSize="12"
                                        FontWeight="Bold" Margin="0,0,0,20"/>

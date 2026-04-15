@@ -8,5 +8,6 @@ namespace OOP_Project
         public string FavouriteGenre { get; set; } = "";
         public string Bio { get; set; } = "";
         public string MemberSince { get; set; } = DateTime.Now.ToString("MMMM yyyy");
+        public string SteamId { get; set; } = "";
     }
 }

@@ -31,6 +31,11 @@ namespace OOP_Project
             Loaded += async (s, e) => await LoadLibraryFromFirebase();
         }
 
+        public async Task ReloadLibraryAsync()
+        {
+            await LoadLibraryFromFirebase();
+        }
+
         private async Task LoadLibraryFromFirebase()
         {
             if (!UserSession.IsLoggedIn) return;

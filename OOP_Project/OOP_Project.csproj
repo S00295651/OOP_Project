@@ -118,6 +118,7 @@
     <Compile Include="Services\FirebaseDataService.cs" />
     <Compile Include="Services\FirebaseAuthService.cs" />
     <Compile Include="Models\UserProfile.cs" />
+    <Compile Include="Services\SteamApiService.cs" />
     <Compile Include="Views\GameDetailsWindow.xaml.cs">
       <DependentUpon>GameDetailsWindow.xaml</DependentUpon>
     </Compile>
