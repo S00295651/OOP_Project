@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using OOP_Project.Services;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -11,6 +12,7 @@ namespace OOP_Project
 {
     public partial class GameDetailsWindow : Window
     {
+        private readonly SteamApiService _steamApiService = new SteamApiService();
         private readonly RawgApiService _apiService;
         private Game _currentGame;
         private const string RATINGS_FILE = "user_ratings.json";
@@ -36,7 +38,7 @@ namespace OOP_Project
 
         private void btnClose_Click(object sender, RoutedEventArgs e)
         {
-            // Find the animation in resources
+            // Find animation in resources
             if (this.Resources["CloseWindowAnimation"] is System.Windows.Media.Animation.Storyboard sb)
             {
                 sb.Completed += (s, ev) => this.Close();
@@ -55,7 +57,6 @@ namespace OOP_Project
             {
                 var details = await _apiService.GetGameDetailsAsync(_currentGame.Id);
 
-                // Hide loading panel
                 loadingPanel.Visibility = Visibility.Collapsed;
 
                 // Populate UI
@@ -67,15 +68,17 @@ namespace OOP_Project
                 txtDevelopers.Text = details.Developers;
                 txtPublishers.Text = details.Publishers;
                 txtPlaytime.Text = details.Playtime > 0 ? $"{details.Playtime} hours" : "N/A";
+
                 txtAchievements.Text = details.AchievementsCount > 0 ? details.AchievementsCount.ToString() : "N/A";
+                var achievements = await _steamApiService.LoadSteamAchievementAsync(details.Id);
+
                 txtDescription.Text = details.Description;
 
-                // Metacritic score with color coding
                 if (details.Metacritic > 0)
                 {
                     txtMetacritic.Text = details.Metacritic.ToString();
 
-                    // Color code based on score
+                    // color code based on score
                     if (details.Metacritic >= 75)
                         metacriticBorder.Background = new System.Windows.Media.SolidColorBrush(
                             (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#6C8F22"));
@@ -91,7 +94,6 @@ namespace OOP_Project
                     txtMetacritic.Text = "N/A";
                 }
 
-                // Load header image
                 if (!string.IsNullOrEmpty(details.BackgroundImage))
                 {
                     try
@@ -106,7 +108,6 @@ namespace OOP_Project
                     catch { }
                 }
 
-                // Show website link if available
                 if (!string.IsNullOrEmpty(details.Website))
                 {
                     websiteLink.Visibility = Visibility.Visible;

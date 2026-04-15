@@ -68,7 +68,8 @@ namespace OOP_Project
                 Username = txtEditUsername.Text.Trim(),
                 FavouriteGenre = txtFavGenre.Text.Trim(),
                 Bio = txtBio.Text.Trim(),
-                MemberSince = memberSince
+                MemberSince = memberSince,
+                SteamId = txtSteamId.Text.Trim()
             };
 
             await _dataService.SaveProfileAsync(profile);

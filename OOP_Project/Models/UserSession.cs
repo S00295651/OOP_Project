@@ -11,6 +11,7 @@ namespace OOP_Project
         public static string IdToken { get; set; } = string.Empty;
         public static string UserId { get; set; } = string.Empty;
         public static string Email { get; set; } = string.Empty;
+        public static string SteamID { get; set; } = string.Empty;
 
         public static bool IsLoggedIn => !string.IsNullOrEmpty(IdToken);
 
@@ -19,6 +20,7 @@ namespace OOP_Project
             IdToken = string.Empty;
             UserId = string.Empty;
             Email = string.Empty;
+            SteamID = string.Empty;
         }
     }
 }
