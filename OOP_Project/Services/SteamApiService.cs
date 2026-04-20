@@ -10,72 +10,62 @@ namespace OOP_Project.Services
     {
         public const string API_KEY = "FAF04C2D878466190C998FC6C031FDC9";
         private const string OWNED_GAMES_URL = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/";
+        private const string ACHIEVEMENTS_URL = "https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/";
+        private const string SCHEMA_URL = "https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/";
         public static readonly HttpClient _http = new HttpClient();
 
-        public async Task<List<Game>> GetOwnedGamesAsync(string steamId)
+         public async Task<List<Game>> GetOwnedGamesAsync(string steamId)
         {
             var url = $"{OWNED_GAMES_URL}?key={API_KEY}&steamid={steamId}&include_appinfo=1&format=json";
-
             var json = await _http.GetStringAsync(url);
-
+ 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var root = JsonSerializer.Deserialize<SteamResponse>(json, options);
-
+ 
             var games = new List<Game>();
-
-            if (root?.Response?.Games == null)
-                return games;
-
+            if (root?.Response?.Games == null) return games;
+ 
             foreach (var sg in root.Response.Games)
             {
                 games.Add(new Game
                 {
-                    Id = sg.Appid,
-                    Name = sg.Name ?? $"App {sg.Appid}",
-                    ImageUrl = $"https://cdn.akamai.steamstatic.com/steam/apps/{sg.Appid}/header.jpg",
+                    Id           = sg.Appid,
+                    SteamAppId   = sg.Appid,
+                    Name         = sg.Name ?? $"App {sg.Appid}",
+                    ImageUrl     = $"https://cdn.akamai.steamstatic.com/steam/apps/{sg.Appid}/header.jpg",
                     PlatformList = "PC",
-                    Released = "",
-                    GenreList = ""
+                    Released     = "",
+                    GenreList    = ""
                 });
             }
-
+ 
             return games;
         }
 
-        public async Task<List<Achievement>> LoadSteamAchievementAsync(int appID)
+        public async Task<(int Unlocked, int Total)> GetAchievementsAsync(string steamId, int appId)
         {
-            var achievements = new List<Achievement>();
-
             try
             {
-                var steamId = UserSession.SteamID;
-                if (string.IsNullOrEmpty(steamId)) throw new Exception("Steam ID not set in profile");
+                var url = $"{ACHIEVEMENTS_URL}?key={API_KEY}&steamid={steamId}&appid={appId}&format=json";
+                var json = await _http.GetStringAsync(url);
 
-                var url = $"https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/?appid={appID}&key{API_KEY}&steamid={steamId}";
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var root = JsonSerializer.Deserialize<AchievementsResponse>(json, options);
 
-                try
-                {
-                    var response = await _http.GetAsync(url);
-                    if (!response.IsSuccessStatusCode) return new List<Achievement>();
+                var list = root?.Playerstats?.Achievements;
+                if (list == null || list.Count == 0) return (0, 0);
 
-                    var json = await response.Content.ReadAsStringAsync();
-                    var data = JsonSerializer.Deserialize<Achievement>(json,
-                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                    if (data != null)
-                    {
-                        achievements.Add(data);
-                    }
-                }
-                catch
-                {
-                    throw new Exception("Failed to load achievements");
-                }
+                int unlocked = 0;
+                foreach (var a in list)
+                    if (a.Achieved == 1) unlocked++;
+
+                return (unlocked, list.Count);
             }
             catch
             {
-                throw new Exception($"Error loading achievements");
+                // Game has no achievements or profile is private (no error)
+                return (0, 0);
             }
-            return achievements;
         }
 
         // JSON models
@@ -98,13 +88,23 @@ namespace OOP_Project.Services
             public string Img_Icon_Url { get; set; }
         }
 
-        public class Achievement
+        private class AchievementsResponse
         {
-            public string APIName { get; set; } = "";
-            public string Name { get; set; } = "";
-            public string Description { get; set; } = "";
-            public int Achieved { get; set; } = 0; // 1 if achieved
-            public string IconUrl { get; set; } = "";
+            public PlayerStats Playerstats { get; set; }
+        }
+        private class PlayerStats
+        {
+            public string SteamID { get; set; }
+            public string GameName { get; set; }
+            public List<AchievementEntry> Achievements { get; set; }
+            public bool Success { get; set; }
+        }
+
+        private class AchievementEntry
+        {
+            public string Apiname { get; set; }
+            public int Achieved { get; set; }  // 1 = unlocked, 0 = locked
+            public long Unlocktime { get; set; }
         }
     }
 }

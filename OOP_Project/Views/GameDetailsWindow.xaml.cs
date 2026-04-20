@@ -55,11 +55,10 @@ namespace OOP_Project
         {
             try
             {
-                var details = await _apiService.GetGameDetailsAsync(_currentGame.Id);
+                var details = await _apiService.GetGameDetailsByNameAsync(_currentGame.Name);
 
                 loadingPanel.Visibility = Visibility.Collapsed;
 
-                // Populate UI
                 txtGameName.Text = details.Name;
                 txtMetacritic.Text = details.Rating.ToString("0.0");
                 txtReleased.Text = details.Released ?? "Unknown";
@@ -68,17 +67,13 @@ namespace OOP_Project
                 txtDevelopers.Text = details.Developers;
                 txtPublishers.Text = details.Publishers;
                 txtPlaytime.Text = details.Playtime > 0 ? $"{details.Playtime} hours" : "N/A";
-
                 txtAchievements.Text = details.AchievementsCount > 0 ? details.AchievementsCount.ToString() : "N/A";
-                var achievements = await _steamApiService.LoadSteamAchievementAsync(details.Id);
-
                 txtDescription.Text = details.Description;
 
                 if (details.Metacritic > 0)
                 {
                     txtMetacritic.Text = details.Metacritic.ToString();
 
-                    // color code based on score
                     if (details.Metacritic >= 75)
                         metacriticBorder.Background = new System.Windows.Media.SolidColorBrush(
                             (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#6C8F22"));
@@ -113,6 +108,8 @@ namespace OOP_Project
                     websiteLink.Visibility = Visibility.Visible;
                     websiteLink.Tag = details.Website;
                 }
+
+                await LoadSteamAchievementsAsync();
             }
             catch (Exception ex)
             {
@@ -120,6 +117,44 @@ namespace OOP_Project
                     MessageBoxButton.OK, MessageBoxImage.Error);
                 Close();
             }
+        }
+
+        private async System.Threading.Tasks.Task LoadSteamAchievementsAsync()
+        {
+            if (!UserSession.IsLoggedIn) return;
+            if (_currentGame.SteamAppId == 0) return;  // not a Steam game
+
+            try
+            {
+                var dataService = new FirebaseDataService();
+                var profile = await dataService.LoadProfileAsync();
+
+                if (string.IsNullOrWhiteSpace(profile.SteamId)) return;
+
+                var steamService = new SteamApiService();
+                var (unlocked, total) = await steamService.GetAchievementsAsync(profile.SteamId, _currentGame.SteamAppId);
+
+                if (total == 0) return;
+
+                // Override RAWG
+                txtAchievements.Text = $"{unlocked} / {total}";
+
+                if (_currentGame.AchievementsUnlocked != unlocked || _currentGame.AchievementsTotal != total)
+                {
+                    _currentGame.AchievementsUnlocked = unlocked;
+                    _currentGame.AchievementsTotal = total;
+
+                    var library = await dataService.LoadLibraryAsync();
+                    var match = library.Find(g => g.Id == _currentGame.Id);
+                    if (match != null)
+                    {
+                        match.AchievementsUnlocked = unlocked;
+                        match.AchievementsTotal = total;
+                        await dataService.SaveLibraryAsync(library);
+                    }
+                }
+            }
+            catch { /* achievements are best-effort, never crash the window */ }
         }
 
         private void LoadUserRating()

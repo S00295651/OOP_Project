@@ -57,7 +57,66 @@ namespace OOP_Project
                 throw new Exception($"Failed to fetch game details: {ex.Message}", ex);
             }
         }
+
+        public async Task<GameDetails> GetGameDetailsByNameAsync(string name)
+        {
+            try
+            {
+                var searchUrl = $"{BASE_URL}/games?key={API_KEY}&search={Uri.EscapeDataString(name)}&page_size=1";
+                var searchJson = await _httpClient.GetStringAsync(searchUrl);
+
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var searchResult = JsonSerializer.Deserialize<RawgSearchResult>(searchJson, options);
+
+                if (searchResult?.Results == null || searchResult.Results.Length == 0)
+                    throw new Exception("Game not found on RAWG.");
+
+                int rawgId = searchResult.Results[0].Id;
+
+                var detailUrl = $"{BASE_URL}/games/{rawgId}?key={API_KEY}";
+                var detailJson = await _httpClient.GetStringAsync(detailUrl);
+                var rawDetails = JsonSerializer.Deserialize<RawgGameDetails>(detailJson, options);
+
+                return MapToGameDetails(rawDetails);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to fetch game details: {ex.Message}", ex);
+            }
+        }
+
+        private static GameDetails MapToGameDetails(RawgGameDetails rawDetails)
+        {
+            return new GameDetails
+            {
+                Id = rawDetails.id,
+                Name = rawDetails.name,
+                Description = rawDetails.description_raw ?? "No description available.",
+                Released = rawDetails.released,
+                Rating = rawDetails.rating,
+                RatingsCount = rawDetails.ratings_count,
+                Metacritic = rawDetails.metacritic ?? 0,
+                BackgroundImage = rawDetails.background_image,
+                Website = rawDetails.website,
+                Genres = rawDetails.genres != null
+                        ? string.Join(", ", System.Linq.Enumerable.Select(rawDetails.genres, g => g.name))
+                        : "Unknown",
+                Platforms = rawDetails.platforms != null
+                        ? string.Join(", ", System.Linq.Enumerable.Select(rawDetails.platforms, p => p.platform.name))
+                        : "Unknown",
+                Developers = rawDetails.developers != null
+                        ? string.Join(", ", System.Linq.Enumerable.Select(rawDetails.developers, d => d.name))
+                        : "Unknown",
+                Publishers = rawDetails.publishers != null
+                        ? string.Join(", ", System.Linq.Enumerable.Select(rawDetails.publishers, p => p.name))
+                        : "Unknown",
+                Playtime = rawDetails.playtime,
+                AchievementsCount = rawDetails.achievements_count
+            };
+        }
     }
+
+    
 
     // Models for API response
     public class RawgGameDetails
@@ -68,7 +127,7 @@ namespace OOP_Project
         public string released { get; set; }
         public double rating { get; set; }
         public int ratings_count { get; set; }
-        public int metacritic { get; set; }
+        public int? metacritic { get; set; }
         public string background_image { get; set; }
         public string website { get; set; }
         public RawgGenre[] genres { get; set; }
@@ -104,6 +163,17 @@ namespace OOP_Project
         public string name { get; set; }
     }
 
+    public class RawgSearchResult
+    {
+        public RawgSearchEntry[] Results { get; set; }
+    }
+
+    public class RawgSearchEntry
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
     // Simplified model for display
     public class GameDetails
     {
@@ -113,7 +183,7 @@ namespace OOP_Project
         public string Released { get; set; }
         public double Rating { get; set; }
         public int RatingsCount { get; set; }
-        public int Metacritic { get; set; }
+        public int? Metacritic { get; set; }
         public string BackgroundImage { get; set; }
         public string Website { get; set; }
         public string Genres { get; set; }

@@ -9,6 +9,7 @@ namespace OOP_Project
     public class Game
     {
         public int Id { get; set; }
+        public int SteamAppId { get; set; }   // 0 if not from Steam
         public string Name { get; set; }
         public string Released { get; set; }
         public string ImageUrl { get; set; }
@@ -16,5 +17,7 @@ namespace OOP_Project
         public string GenreList { get; set; }
         public int UserRating { get; set; } // 1–5
         public int PersonalRating { get; set; }
+        public int AchievementsUnlocked { get; set; }
+        public int AchievementsTotal { get; set; }
     }
 }
